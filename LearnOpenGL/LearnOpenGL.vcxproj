@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\stb_image;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glfw-3.3.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glm-0.9.9.8;$(SolutionDir)Dependencies\stb_image;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glfw-3.3.2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

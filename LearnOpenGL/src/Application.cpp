@@ -2,6 +2,9 @@
 #include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include "Shader.h"
 
@@ -163,6 +166,7 @@ int main()
     //glBindVertexArray(0);
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+    /* Transform */
     basicShader.use();
     basicShader.setInt("texture1", 0);
     basicShader.setInt("texture2", 1);
@@ -185,6 +189,12 @@ int main()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
         basicShader.use();
+
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        basicShader.setMat4("transform", trans);
+
         glBindVertexArray(VAO);
         //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         //glDrawArrays(GL_TRIANGLES, 0, 3);
