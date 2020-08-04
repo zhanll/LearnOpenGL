@@ -63,24 +63,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.Zoom(yoffset);
 }
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aColor;\n"
-"out vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos, 1.0);\n"
-"   ourColor = aColor;\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(ourColor, 1.0f);\n"
-"}\0";
-
 int main()
 {
     glfwInit();
@@ -122,6 +104,7 @@ int main()
 
     /* Shader */
     Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
+    Shader lightShader("res/shaders/basic.vs", "res/shaders/light.fs");
 
     /* Vertex Input */
     float vertices[] = {
@@ -201,6 +184,31 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 
+    /* Linking Vertex Attributes */
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // texture attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    /* Light */
+    unsigned int lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    /* Unbind */
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
     /* Texture */
     unsigned int texture1;
     unsigned int texture2;
@@ -250,22 +258,7 @@ int main()
     }
     stbi_image_free(data2);
 
-	/* Linking Vertex Attributes */
-    // position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-    // texture attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    /* Unbind */
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //glBindVertexArray(0);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    basicShader.use();
-    basicShader.setInt("texture1", 0);
-    basicShader.setInt("texture2", 1);
+    glm::vec3 lightPos(1.2f, 1.0f, -10.0f);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -283,12 +276,15 @@ int main()
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        // draw a triangle
+        /* basic */
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
         basicShader.use();
+        basicShader.setInt("texture1", 0);
+        basicShader.setInt("texture2", 1);
+        basicShader.setVec3("lightColor", 1.0f, 0.5f, 0.31f);
 
 		glm::mat4 view;
         view = camera.GetViewMatrix();
@@ -313,6 +309,20 @@ int main()
         }
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+        /* light */
+        lightShader.use();
+        lightShader.setMat4("view", view);
+        lightShader.setMat4("projection", projection);
+
+        glm::mat4 lightModel = glm::mat4(1.0f);
+        lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+        lightModel = glm::translate(lightModel, lightPos);
+
+        lightShader.setMat4("model", lightModel);
+
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
         // check all events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -320,6 +330,7 @@ int main()
 
     /* Clean up */
     glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
     //glDeleteBuffers(1, &EBO);
     glDeleteTextures(1, &texture1);
