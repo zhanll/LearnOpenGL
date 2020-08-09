@@ -10,6 +10,7 @@ public:
 
 	glm::mat4 GetViewMatrix() const;
 
+	inline glm::vec3 GetCameraPos() const { return cameraPos; }
 	inline float GetFOV() const { return fov; }
 
 	void MoveForward(float deltaTime);

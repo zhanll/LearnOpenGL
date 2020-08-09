@@ -289,6 +289,7 @@ int main()
         basicShader.setInt("texture2", 1);
         basicShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
         basicShader.setVec3("lightPos", lightPos);
+        basicShader.setVec3("viewPos", camera.GetCameraPos());
 
 		glm::mat4 view;
         view = camera.GetViewMatrix();
