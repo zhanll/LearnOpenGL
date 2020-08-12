@@ -253,6 +253,7 @@ int main()
 
     /* Texture */
     unsigned int diffuseMap = loadTexture("res/textures/container2.png");
+    unsigned int specularMap = loadTexture("res/textures/container2_specular.png");
 
     glm::vec3 lightPos(1.2f, 1.0f, -10.0f);
 
@@ -275,12 +276,11 @@ int main()
         /* basic */
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
-        //glActiveTexture(GL_TEXTURE1);
-        //glBindTexture(GL_TEXTURE_2D, texture2);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
         basicShader.use();
 		basicShader.setInt("material.diffuse", 0);
-		//basicShader.setInt("texture2", 1);
-        basicShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		basicShader.setInt("material.specular", 1);
         basicShader.setFloat("material.shininess", 32.0f);
         basicShader.setVec3("light.position", lightPos);
 
