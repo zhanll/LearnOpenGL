@@ -255,6 +255,15 @@ int main()
     unsigned int diffuseMap = loadTexture("res/textures/container2.png");
     unsigned int specularMap = loadTexture("res/textures/container2_specular.png");
 
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, specularMap);
+
+    basicShader.use();
+    basicShader.setInt("material.diffuse", 0);
+    basicShader.setInt("material.specular", 1);
+
     glm::vec3 lightPos(1.2f, 1.0f, -10.0f);
 
     // render loop
@@ -274,23 +283,23 @@ int main()
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         /* basic */
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap);
         basicShader.use();
-		basicShader.setInt("material.diffuse", 0);
-		basicShader.setInt("material.specular", 1);
         basicShader.setFloat("material.shininess", 32.0f);
-        basicShader.setVec3("light.position", lightPos);
+        basicShader.setVec3("light.position", camera.GetCameraPos());
+        basicShader.setVec3("light.direction", camera.GetCameraDirection());
+        basicShader.setFloat("light.constant", 1.0f);
+        basicShader.setFloat("light.linear", 0.09f);
+        basicShader.setFloat("light.quadratic", 0.032f);
+        basicShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        basicShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
 
-        glm::vec3 lightColor;
-        lightColor.x = sin(glfwGetTime() * 2.0f);
+        glm::vec3 lightColor(1.0f);
+        /*lightColor.x = sin(glfwGetTime() * 2.0f);
         lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);*/
 
-        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.1f);
 
         basicShader.setVec3("light.ambient", ambientColor);
         basicShader.setVec3("light.diffuse", diffuseColor);
