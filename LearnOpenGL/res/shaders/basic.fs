@@ -9,8 +9,8 @@ uniform vec3 viewPos;
 
 struct Material
 {
-	sampler2D diffuse;
-	sampler2D specular;
+	sampler2D texture_diffuse1;
+	sampler2D texture_specular1;
 
 	float shininess;
 };
@@ -28,12 +28,12 @@ uniform DirLight dirLight;
 
 vec3 DiffuseColor()
 {
-	return vec3(texture(material.diffuse, TexCoord));
+	return vec3(texture(material.texture_diffuse1, TexCoord));
 }
 
 vec3 SpecularColor()
 {
-	return vec3(texture(material.specular, TexCoord));
+	return vec3(texture(material.texture_specular1, TexCoord));
 }
 
 vec3 CalcAmbient(vec3 lightAmbient, vec3 diffuseColor)
