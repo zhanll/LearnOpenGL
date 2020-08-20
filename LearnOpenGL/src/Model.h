@@ -1,10 +1,9 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "Mesh.h"
 
 class Shader;
-class Mesh;
-struct Texture;
 struct aiNode;
 struct aiScene;
 struct aiMesh;
@@ -29,5 +28,5 @@ private:
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
     std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
-    unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma);
+    unsigned int TextureFromFile(const char* path, const std::string& directory);
 };

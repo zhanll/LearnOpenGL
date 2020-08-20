@@ -161,27 +161,11 @@ int main()
 		glm::vec3(0.0f,  0.0f, -25.0f)
 	};
 
-    /* Vertex Array Object */
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
     /* Vertex Buffer Object */
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    /* Linking Vertex Attributes */
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texture attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // normal attribute
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-    glEnableVertexAttribArray(2);
 
     /* Light */
     unsigned int lightVAO;
@@ -277,7 +261,11 @@ int main()
 
         basicShader.setMat4("view", view);
         basicShader.setMat4("projection", projection);
-        
+
+        glm::mat4 meshModel = glm::mat4(1.0f);
+        meshModel = glm::translate(meshModel, glm::vec3(0.f, 0.f, -5.f));
+        basicShader.setMat4("model", meshModel);
+
         model.Draw(basicShader);
 
         /* light */
@@ -303,7 +291,6 @@ int main()
     }
 
     /* Clean up */
-    glDeleteVertexArrays(1, &VAO);
     glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
 

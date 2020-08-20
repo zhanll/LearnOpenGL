@@ -126,13 +126,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\assimp-5.0.1\include;$(SolutionDir)Dependencies\glm-0.9.9.8;$(SolutionDir)Dependencies\stb_image;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glfw-3.3.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\assimp-5.0.1\include\build\include;$(SolutionDir)Dependencies\assimp-5.0.1\include;$(SolutionDir)Dependencies\glm-0.9.9.8;$(SolutionDir)Dependencies\stb_image;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glfw-3.3.2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\assimp-5.0.1\libs;$(SolutionDir)Dependencies\glfw-3.3.2\libs</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
