@@ -173,6 +173,7 @@
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\light.fs" />
     <None Include="res\shaders\outline.fs" />
+    <None Include="res\shaders\transparent.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

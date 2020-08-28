@@ -21,7 +21,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
-Camera camera(glm::vec3(0.f, 0.f, 3.f), -90.f, 0.f);
+Camera camera(glm::vec3(0.f, 3.f, 3.f), -90.f, 0.f);
 
 void processInput(GLFWwindow* window)
 {
@@ -107,39 +107,42 @@ int main()
     /* Shader */
     Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
     Shader lightShader("res/shaders/basic.vs", "res/shaders/light.fs");
+    Shader outlineShader("res/shaders/basic.vs", "res/shaders/outline.fs");
+    Shader transparentShader("res/shaders/basic.vs", "res/shaders/transparent.fs");
 
     /* Model */
-    Model model("res/models/backpack/backpack.obj");
+    Model backpackModel("res/models/backpack/backpack.obj");
+    Model floorModel("res/models/plane/plane.obj");
 
     /* Vertex Input */
     float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   0.0f,  0.0f, -1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,   0.0f,  0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,    0.0f, 0.0f,  
+	 0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,  1.0f, 0.0f,  
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,   1.0f, 1.0f,   
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,   1.0f, 1.0f,   
+	-0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,  0.0f, 1.0f,  
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,    0.0f, 0.0f,  
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   0.0f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,   0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,   0.0f,  0.0f, 1.0f,   0.0f, 0.0f,  
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,    1.0f, 0.0f,   
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,    1.0f, 1.0f,   
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,    1.0f, 1.0f,   
+	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,    0.0f, 1.0f,   
+	-0.5f, -0.5f,  0.5f,   0.0f,  0.0f, 1.0f,   0.0f, 0.0f,  
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,   
+	-0.5f,  0.5f, -0.5f,   -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,    0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,   
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,   1.0f, 0.0f,   
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,   1.0f, 1.0f,   
+	 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,  0.0f, 1.0f,  
+	 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,  0.0f, 1.0f,  
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,   0.0f, 0.0f,   
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,   1.0f, 0.0f,   
 
     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 1.0f,   0.0f, -1.0f,  0.0f,
@@ -161,24 +164,85 @@ int main()
 		glm::vec3(-4.0f,  2.0f, -12.0f),
 		glm::vec3(0.0f,  0.0f, -25.0f)
 	};
+	float planeVertices[] = {
+		// positions           // normal           // texture Coords 
+		 5.0f, -0.5f,  5.0f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+		-5.0f, -0.5f,  5.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+		-5.0f, -0.5f, -5.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
 
-    /* Vertex Buffer Object */
+		 5.0f, -0.5f,  5.0f,   0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+		-5.0f, -0.5f, -5.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+		 5.0f, -0.5f, -5.0f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f
+	};
+	float transparentVertices[] = {
+		// positions            // normal                // texture Coords (swapped y coordinates because texture is flipped upside down)
+		0.0f,  0.5f,  0.0f,     0.0f,  0.0f,  1.0f,      0.0f,  0.0f,
+		0.0f, -0.5f,  0.0f,    0.0f,  0.0f,  1.0f,      0.0f,  1.0f,
+		1.0f, -0.5f,  0.0f,    0.0f,  0.0f,  1.0f,      1.0f,  1.0f,
+
+		0.0f,  0.5f,  0.0f,     0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
+		1.0f, -0.5f,  0.0f,    0.0f,  0.0f,  1.0f,     1.0f,  1.0f,
+		1.0f,  0.5f,  0.0f,     0.0f,  0.0f,  1.0f,     1.0f,  0.0f
+	};
+	std::vector<glm::vec3> vegetation
+	{
+		glm::vec3(-1.5f, 0.0f, -0.48f),
+		glm::vec3(1.5f, 0.0f, 0.51f),
+		glm::vec3(0.0f, 0.0f, 0.7f),
+		glm::vec3(-0.3f, 0.0f, -2.3f),
+		glm::vec3(0.5f, 0.0f, -0.6f)
+	};
+
+    /* Light Cube */
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    /* Light */
-    unsigned int lightVAO;
-    glGenVertexArrays(1, &lightVAO);
-    glBindVertexArray(lightVAO);
+	unsigned int lightVAO;
+	glGenVertexArrays(1, &lightVAO);
+	glBindVertexArray(lightVAO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+    /** Floor Plane */
+    unsigned int planeVBO;
+    glGenBuffers(1, &planeVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
+
+    unsigned int planeVAO;
+    glGenVertexArrays(1, &planeVAO);
+    glBindVertexArray(planeVAO);
+    
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+    /** Grass */
+    unsigned int grassVBO;
+    glGenBuffers(1, &grassVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+
+    unsigned int grassVAO;
+    glGenVertexArrays(1, &grassVAO);
+    glBindVertexArray(grassVAO);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
     /* Unbind */
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -223,30 +287,6 @@ int main()
 		basicShader.setFloat("pointLight[0].linear", 0.09f);
 		basicShader.setFloat("pointLight[0].quadratic", 0.032f);
 
-		basicShader.setVec3("pointLight[1].position", pointLightPositions[1]);
-		basicShader.setVec3("pointLight[1].ambient", 0.05f, 0.05f, 0.05f);
-		basicShader.setVec3("pointLight[1].diffuse", 0.5f, 0.5f, 0.5f);
-		basicShader.setVec3("pointLight[1].specular", 1.0f, 1.0f, 1.0f);
-		basicShader.setFloat("pointLight[1].constant", 1.0f);
-		basicShader.setFloat("pointLight[1].linear", 0.09f);
-		basicShader.setFloat("pointLight[1].quadratic", 0.032f);
-
-		basicShader.setVec3("pointLight[2].position", pointLightPositions[2]);
-		basicShader.setVec3("pointLight[2].ambient", 0.05f, 0.05f, 0.05f);
-		basicShader.setVec3("pointLight[2].diffuse", 0.5f, 0.5f, 0.5f);
-		basicShader.setVec3("pointLight[2].specular", 1.0f, 1.0f, 1.0f);
-		basicShader.setFloat("pointLight[2].constant", 1.0f);
-		basicShader.setFloat("pointLight[2].linear", 0.09f);
-		basicShader.setFloat("pointLight[2].quadratic", 0.032f);
-
-		basicShader.setVec3("pointLight[3].position", pointLightPositions[3]);
-		basicShader.setVec3("pointLight[3].ambient", 0.05f, 0.05f, 0.05f);
-		basicShader.setVec3("pointLight[3].diffuse", 0.5f, 0.5f, 0.5f);
-		basicShader.setVec3("pointLight[3].specular", 1.0f, 1.0f, 1.0f);
-		basicShader.setFloat("pointLight[3].constant", 1.0f);
-		basicShader.setFloat("pointLight[3].linear", 0.09f);
-		basicShader.setFloat("pointLight[3].quadratic", 0.032f);
-
         basicShader.setVec3("spotLight.position", camera.GetCameraPos());
         basicShader.setVec3("spotLight.direction", camera.GetCameraDirection());
 		basicShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
@@ -269,11 +309,18 @@ int main()
         basicShader.setMat4("view", view);
         basicShader.setMat4("projection", projection);
 
-        glm::mat4 meshModel = glm::mat4(1.0f);
-        meshModel = glm::translate(meshModel, glm::vec3(0.f, 0.f, -5.f));
-        basicShader.setMat4("model", meshModel);
+        glm::mat4 backpackMat = glm::mat4(1.0f);
+        backpackMat = glm::translate(backpackMat, glm::vec3(0.f, 2.f, -5.f));
+        basicShader.setMat4("model", backpackMat);
 
-        model.Draw(basicShader);
+        backpackModel.Draw(basicShader);
+
+        glm::mat4 floorMat = glm::mat4(1.0f);
+        floorMat = glm::translate(floorMat, glm::vec3(0.f, 0.f, 0.f));
+        floorMat = glm::scale(floorMat, glm::vec3(50.f, 50.f, 50.f));
+        basicShader.setMat4("model", floorMat);
+
+        floorModel.Draw(basicShader);
 
 		// 2nd. render pass: now draw slightly scaled versions of the objects, this time disabling stencil writing.
 		// Because the stencil buffer is now filled with several 1s. The parts of the buffer that are 1 are not drawn, thus only drawing 
@@ -283,17 +330,16 @@ int main()
         glStencilMask(0x00);    // disable writing to the stencil buffer
         glDisable(GL_DEPTH_TEST);
 
-        Shader outlineShader("res/shaders/basic.vs", "res/shaders/outline.fs");
         outlineShader.use();
         outlineShader.setMat4("view", view);
         outlineShader.setMat4("projection", projection);
 
         glm::mat4 scaledMeshModel = glm::mat4(1.0f);
-        scaledMeshModel = glm::translate(scaledMeshModel, glm::vec3(0.f, 0.f, -5.f));
+        scaledMeshModel = glm::translate(scaledMeshModel, glm::vec3(0.f, 2.f, -5.f));
         scaledMeshModel = glm::scale(scaledMeshModel, glm::vec3(1.01f, 1.01f, 1.01f));
         outlineShader.setMat4("model", scaledMeshModel);
 
-        model.Draw(outlineShader);
+        backpackModel.Draw(outlineShader);
 
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -305,7 +351,7 @@ int main()
         lightShader.setMat4("projection", projection);
 
         glBindVertexArray(lightVAO);
-		for (unsigned int i = 0; i < 4; i++)
+		for (unsigned int i = 0; i < 1; i++)
 		{
 			glm::mat4 lightModel = glm::mat4(1.0f);
 			lightModel = glm::scale(lightModel, glm::vec3(0.2f));

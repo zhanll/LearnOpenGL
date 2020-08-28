@@ -53,5 +53,6 @@
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\light.fs" />
     <None Include="res\shaders\outline.fs" />
+    <None Include="res\shaders\transparent.fs" />
   </ItemGroup>
 </Project>

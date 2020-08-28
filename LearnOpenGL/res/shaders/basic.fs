@@ -76,7 +76,7 @@ struct PointLight
 	float linear;
 	float quadratic;
 };
-#define NR_POINT_LIGHTS 4
+#define NR_POINT_LIGHTS 1
 uniform PointLight pointLight[NR_POINT_LIGHTS];
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir)
