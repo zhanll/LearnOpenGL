@@ -103,6 +103,7 @@ int main()
     /* Enable */
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
+    glEnable(GL_CULL_FACE);
 
     /* Shader */
     Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
