@@ -56,5 +56,7 @@
     <None Include="res\shaders\transparent.fs" />
     <None Include="res\shaders\screen.vs" />
     <None Include="res\shaders\screen.fs" />
+    <None Include="res\shaders\skybox.vs" />
+    <None Include="res\shaders\skybox.fs" />
   </ItemGroup>
 </Project>

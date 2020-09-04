@@ -175,6 +175,8 @@
     <None Include="res\shaders\outline.fs" />
     <None Include="res\shaders\screen.fs" />
     <None Include="res\shaders\screen.vs" />
+    <None Include="res\shaders\skybox.fs" />
+    <None Include="res\shaders\skybox.vs" />
     <None Include="res\shaders\transparent.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
