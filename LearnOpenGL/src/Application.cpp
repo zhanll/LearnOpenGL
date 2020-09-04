@@ -203,12 +203,6 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		// 1st. render pass, draw objects as normal, writing to the stencil buffer
-		// --------------------------------------------------------------------
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);  // all fragments should pass the stencil test
-        glStencilMask(0xFF);    // enable writing to the stencil buffer
-
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         /* basic */
@@ -297,29 +291,6 @@ int main()
 
             grassModel.Draw(transparentShader);
         }
-
-		// 2nd. render pass: now draw slightly scaled versions of the objects, this time disabling stencil writing.
-		// Because the stencil buffer is now filled with several 1s. The parts of the buffer that are 1 are not drawn, thus only drawing 
-		// the objects' size differences, making it look like borders.
-		// -----------------------------------------------------------------------------------------------------------------------------
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        glStencilMask(0x00);    // disable writing to the stencil buffer
-        glDisable(GL_DEPTH_TEST);
-
-        outlineShader.use();
-        outlineShader.setMat4("view", view);
-        outlineShader.setMat4("projection", projection);
-
-        glm::mat4 scaledMeshModel = glm::mat4(1.0f);
-        scaledMeshModel = glm::translate(scaledMeshModel, glm::vec3(0.f, 2.f, -5.f));
-        scaledMeshModel = glm::scale(scaledMeshModel, glm::vec3(1.01f, 1.01f, 1.01f));
-        outlineShader.setMat4("model", scaledMeshModel);
-
-        backpackModel.Draw(outlineShader);
-
-        glStencilMask(0xFF);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glEnable(GL_DEPTH_TEST);
 
 		// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
