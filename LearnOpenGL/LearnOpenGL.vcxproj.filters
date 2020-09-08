@@ -58,5 +58,8 @@
     <None Include="res\shaders\screen.fs" />
     <None Include="res\shaders\skybox.vs" />
     <None Include="res\shaders\skybox.fs" />
+    <None Include="res\shaders\explode.gs" />
+    <None Include="res\shaders\explode.vs" />
+    <None Include="res\shaders\explode.fs" />
   </ItemGroup>
 </Project>

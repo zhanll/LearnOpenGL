@@ -151,6 +151,7 @@ int main()
     Shader transparentShader("res/shaders/basic.vs", "res/shaders/transparent.fs");
     Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
     Shader skyboxShader("res/shaders/skybox.vs", "res/shaders/skybox.fs");
+    Shader explodeShader("res/shaders/explode.vs", "res/shaders/explode.fs", "res/shaders/explode.gs");
 
     /* Model */
     Model backpackModel("res/models/backpack/backpack.obj");
@@ -297,11 +298,11 @@ int main()
         basicShader.setMat4("projection", projection);
 
         /** backpack */
-        glm::mat4 backpackMat = glm::mat4(1.0f);
+        /*glm::mat4 backpackMat = glm::mat4(1.0f);
         backpackMat = glm::translate(backpackMat, glm::vec3(0.f, 2.f, -5.f));
         basicShader.setMat4("model", backpackMat);
 
-        backpackModel.Draw(basicShader);
+        backpackModel.Draw(basicShader);*/
 
         /** floor */
         glm::mat4 floorMat = glm::mat4(1.0f);
@@ -343,6 +344,16 @@ int main()
 
             grassModel.Draw(transparentShader);
         }
+
+        explodeShader.use();
+        explodeShader.setMat4("view", view);
+        explodeShader.setMat4("projection", projection);
+
+		glm::mat4 backpackMat = glm::mat4(1.0f);
+		backpackMat = glm::translate(backpackMat, glm::vec3(0.f, 2.f, -5.f));
+        explodeShader.setMat4("model", backpackMat);
+        explodeShader.setFloat("time", glfwGetTime());
+        backpackModel.Draw(explodeShader);
 
         // draw skybox as last
         glCullFace(GL_FRONT);

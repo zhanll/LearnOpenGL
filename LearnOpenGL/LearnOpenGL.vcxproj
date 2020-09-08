@@ -171,6 +171,9 @@
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
+    <None Include="res\shaders\explode.fs" />
+    <None Include="res\shaders\explode.gs" />
+    <None Include="res\shaders\explode.vs" />
     <None Include="res\shaders\light.fs" />
     <None Include="res\shaders\outline.fs" />
     <None Include="res\shaders\screen.fs" />
