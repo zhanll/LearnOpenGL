@@ -33,6 +33,9 @@
     <ClCompile Include="src\Model.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderFeatures\GeometryShader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -45,6 +48,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\Model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderFeatures\GeometryShader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderFeatures\RenderFeature.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Config.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

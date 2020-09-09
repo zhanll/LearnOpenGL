@@ -9,9 +9,10 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Config.h"
+#include "RenderFeatures/RenderFeature.h"
+#include "RenderFeatures/GeometryShader.h"
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -135,9 +136,34 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     /* Query max vertex attributes supported */
-    int nrAttributes;
+    /*int nrAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-    std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
+    std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;*/
+
+    /* Select Render Feature */
+    struct RenderFeatureUnit
+    {
+        std::string Name;
+        std::shared_ptr<RenderFeatureBase> RenderFeature;
+    };
+    std::vector<RenderFeatureUnit> RenderFeatures =
+    {
+        {"GeometryShader", std::make_shared<RenderFeature_GeometryShader>(&camera)}
+    };
+    std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
+    std::cout << "Select Render Feature:" << std::endl;
+    std::cout << "-------------------------" << std::endl;
+    for (size_t i = 0; i < RenderFeatures.size(); i++)
+    {
+        std::cout << i+1 << "\t" << RenderFeatures[i].Name << std::endl;
+    }
+    std::cout << "-------------------------" << std::endl;
+    int n = 0;
+    std::cin >> n;
+    if (n > 0 && n <= RenderFeatures.size())
+    {
+        SelectedRenderFeature = RenderFeatures[n-1].RenderFeature;
+    }
 
     /* Enable */
     glEnable(GL_DEPTH_TEST);
@@ -151,8 +177,6 @@ int main()
     Shader transparentShader("res/shaders/basic.vs", "res/shaders/transparent.fs");
     Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
     Shader skyboxShader("res/shaders/skybox.vs", "res/shaders/skybox.fs");
-    Shader explodeShader("res/shaders/explode.vs", "res/shaders/explode.fs", "res/shaders/explode.gs");
-    Shader normalVisShader("res/shaders/normal_visualize.vs", "res/shaders/normal_visualize.fs", "res/shaders/normal_visualize.gs");
 
     /* Model */
     Model backpackModel("res/models/backpack/backpack.obj");
@@ -238,6 +262,11 @@ int main()
         "res/textures/skybox/back.jpg"
     };
     unsigned int cubemapTexture = loadCubemap(faces);
+
+    if (SelectedRenderFeature)
+    {
+        SelectedRenderFeature->Setup();
+    }
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -346,21 +375,10 @@ int main()
             grassModel.Draw(transparentShader);
         }
 
-        explodeShader.use();
-        explodeShader.setMat4("view", view);
-        explodeShader.setMat4("projection", projection);
-
-		glm::mat4 backpackMat = glm::mat4(1.0f);
-		backpackMat = glm::translate(backpackMat, glm::vec3(0.f, 2.f, -5.f));
-        explodeShader.setMat4("model", backpackMat);
-        explodeShader.setFloat("time", glfwGetTime());
-        backpackModel.Draw(explodeShader);
-
-		normalVisShader.use();
-		normalVisShader.setMat4("view", view);
-		normalVisShader.setMat4("projection", projection);
-		normalVisShader.setMat4("model", backpackMat);
-		backpackModel.Draw(normalVisShader);
+        if (SelectedRenderFeature)
+        {
+            SelectedRenderFeature->Render();
+        }
 
         // draw skybox as last
         glCullFace(GL_FRONT);
