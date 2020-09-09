@@ -61,5 +61,8 @@
     <None Include="res\shaders\explode.gs" />
     <None Include="res\shaders\explode.vs" />
     <None Include="res\shaders\explode.fs" />
+    <None Include="res\shaders\normal_visualize.gs" />
+    <None Include="res\shaders\normal_visualize.vs" />
+    <None Include="res\shaders\normal_visualize.fs" />
   </ItemGroup>
 </Project>

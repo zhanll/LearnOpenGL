@@ -152,6 +152,7 @@ int main()
     Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
     Shader skyboxShader("res/shaders/skybox.vs", "res/shaders/skybox.fs");
     Shader explodeShader("res/shaders/explode.vs", "res/shaders/explode.fs", "res/shaders/explode.gs");
+    Shader normalVisShader("res/shaders/normal_visualize.vs", "res/shaders/normal_visualize.fs", "res/shaders/normal_visualize.gs");
 
     /* Model */
     Model backpackModel("res/models/backpack/backpack.obj");
@@ -354,6 +355,12 @@ int main()
         explodeShader.setMat4("model", backpackMat);
         explodeShader.setFloat("time", glfwGetTime());
         backpackModel.Draw(explodeShader);
+
+		normalVisShader.use();
+		normalVisShader.setMat4("view", view);
+		normalVisShader.setMat4("projection", projection);
+		normalVisShader.setMat4("model", backpackMat);
+		backpackModel.Draw(normalVisShader);
 
         // draw skybox as last
         glCullFace(GL_FRONT);
