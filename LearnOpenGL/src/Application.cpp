@@ -12,6 +12,7 @@
 #include "Config.h"
 #include "RenderFeatures/RenderFeature.h"
 #include "RenderFeatures/GeometryShader.h"
+#include "RenderFeatures/Skybox.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -65,47 +66,34 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.Zoom(yoffset);
 }
 
-// loads a cubemap texture from 6 individual texture faces
-// order:
-// +X (right)
-// -X (left)
-// +Y (top)
-// -Y (bottom)
-// +Z (front) 
-// -Z (back)
-// -------------------------------------------------------
-unsigned int loadCubemap(std::vector<std::string> faces)
-{
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-    int width, height, nrChannels;
-    for (unsigned int i = 0; i < faces.size(); i++)
-    {
-        unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-        if (data)
-        {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-            stbi_image_free(data);
-        }
-        else
-        {
-            std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-            stbi_image_free(data);
-        }
-    }
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    return textureID;
-}
-
 int main()
 {
+	/* Select Render Feature */
+	struct RenderFeatureUnit
+	{
+		std::string Name;
+		std::shared_ptr<RenderFeatureBase> RenderFeature;
+	};
+	std::vector<RenderFeatureUnit> RenderFeatures =
+	{
+		{"GeometryShader", std::make_shared<RenderFeature_GeometryShader>(&camera)},
+        {"Skybox", std::make_shared<RenderFeature_Skybox>(&camera)}
+	};
+	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
+	std::cout << "Select Render Feature:" << std::endl;
+	std::cout << "-------------------------" << std::endl;
+	for (size_t i = 0; i < RenderFeatures.size(); i++)
+	{
+		std::cout << i + 1 << "\t" << RenderFeatures[i].Name << std::endl;
+	}
+	std::cout << "-------------------------" << std::endl;
+	int n = 0;
+	std::cin >> n;
+	if (n > 0 && n <= RenderFeatures.size())
+	{
+		SelectedRenderFeature = RenderFeatures[n - 1].RenderFeature;
+	}
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -140,31 +128,6 @@ int main()
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;*/
 
-    /* Select Render Feature */
-    struct RenderFeatureUnit
-    {
-        std::string Name;
-        std::shared_ptr<RenderFeatureBase> RenderFeature;
-    };
-    std::vector<RenderFeatureUnit> RenderFeatures =
-    {
-        {"GeometryShader", std::make_shared<RenderFeature_GeometryShader>(&camera)}
-    };
-    std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
-    std::cout << "Select Render Feature:" << std::endl;
-    std::cout << "-------------------------" << std::endl;
-    for (size_t i = 0; i < RenderFeatures.size(); i++)
-    {
-        std::cout << i+1 << "\t" << RenderFeatures[i].Name << std::endl;
-    }
-    std::cout << "-------------------------" << std::endl;
-    int n = 0;
-    std::cin >> n;
-    if (n > 0 && n <= RenderFeatures.size())
-    {
-        SelectedRenderFeature = RenderFeatures[n-1].RenderFeature;
-    }
-
     /* Enable */
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
@@ -176,14 +139,12 @@ int main()
     Shader outlineShader("res/shaders/basic.vs", "res/shaders/outline.fs");
     Shader transparentShader("res/shaders/basic.vs", "res/shaders/transparent.fs");
     Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
-    Shader skyboxShader("res/shaders/skybox.vs", "res/shaders/skybox.fs");
 
     /* Model */
     Model backpackModel("res/models/backpack/backpack.obj");
     Model floorModel("res/models/plane/plane.obj");
     Model cubeModel("res/models/cube/cube.obj");
     Model grassModel("res/models/grass/plane.obj");
-    Model skyboxModel("res/models/cube/cube.obj");
 
     /* Position Input */
 	glm::vec3 pointLightPositions[] = {
@@ -251,17 +212,6 @@ int main()
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
-
-    std::vector<std::string> faces
-    {
-        "res/textures/skybox/right.jpg",
-        "res/textures/skybox/left.jpg",
-        "res/textures/skybox/top.jpg",
-        "res/textures/skybox/bottom.jpg",
-        "res/textures/skybox/front.jpg",
-        "res/textures/skybox/back.jpg"
-    };
-    unsigned int cubemapTexture = loadCubemap(faces);
 
     if (SelectedRenderFeature)
     {
@@ -379,24 +329,6 @@ int main()
         {
             SelectedRenderFeature->Render();
         }
-
-        // draw skybox as last
-        glCullFace(GL_FRONT);
-        glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-        skyboxShader.use();
-        skyboxShader.setInt("skybox", 0);
-        glm::mat4 skyboxMat = glm::mat4(1.0f);
-        skyboxMat = glm::translate(skyboxMat, camera.GetCameraPos());
-        skyboxMat = glm::scale(skyboxMat, glm::vec3(2.0f, 2.0f, 2.0f));
-        skyboxShader.setMat4("model", skyboxMat);
-        skyboxShader.setMat4("view", view);
-        skyboxShader.setMat4("projection", projection);
-        // skybox cube
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        skyboxModel.Draw(skyboxShader);
-        glDepthFunc(GL_LESS); // set depth function back to default
-        glCullFace(GL_BACK);
 
 		// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
 		/*glBindFramebuffer(GL_FRAMEBUFFER, 0);
