@@ -13,6 +13,7 @@
 #include "RenderFeatures/RenderFeature.h"
 #include "RenderFeatures/GeometryShader.h"
 #include "RenderFeatures/Skybox.h"
+#include "RenderFeatures/Blend.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -77,7 +78,8 @@ int main()
 	std::vector<RenderFeatureUnit> RenderFeatures =
 	{
 		{"GeometryShader", std::make_shared<RenderFeature_GeometryShader>(&camera)},
-        {"Skybox", std::make_shared<RenderFeature_Skybox>(&camera)}
+        {"Skybox", std::make_shared<RenderFeature_Skybox>(&camera)},
+        {"Blend", std::make_shared<RenderFeature_Blend>(&camera)}
 	};
 	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
 	std::cout << "Select Render Feature:" << std::endl;
@@ -137,14 +139,12 @@ int main()
     Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
     Shader lightShader("res/shaders/basic.vs", "res/shaders/light.fs");
     Shader outlineShader("res/shaders/basic.vs", "res/shaders/outline.fs");
-    Shader transparentShader("res/shaders/basic.vs", "res/shaders/transparent.fs");
     Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
 
     /* Model */
     Model backpackModel("res/models/backpack/backpack.obj");
     Model floorModel("res/models/plane/plane.obj");
     Model cubeModel("res/models/cube/cube.obj");
-    Model grassModel("res/models/grass/plane.obj");
 
     /* Position Input */
 	glm::vec3 pointLightPositions[] = {
@@ -152,14 +152,6 @@ int main()
 		glm::vec3(2.3f, -3.3f, -4.0f),
 		glm::vec3(-4.0f,  2.0f, -12.0f),
 		glm::vec3(0.0f,  0.0f, -25.0f)
-	};
-	std::vector<glm::vec3> vegetation
-	{
-		glm::vec3(-1.5f, 0.0f, -0.48f),
-		glm::vec3(1.5f, 0.0f, 0.51f),
-		glm::vec3(0.0f, 0.0f, 0.7f),
-		glm::vec3(-0.3f, 0.0f, -2.3f),
-		glm::vec3(0.5f, 0.0f, -0.6f)
 	};
 
     /** Vertex Data */
@@ -306,23 +298,6 @@ int main()
             lightShader.setMat4("model", lightModel);
 
             cubeModel.Draw(lightShader);
-        }
-
-        /** grass */
-        transparentShader.use();
-        transparentShader.setMat4("view", view);
-        transparentShader.setMat4("projection", projection);
-
-        for (size_t i = 0; i < vegetation.size(); i++)
-        {
-            glm::mat4 grassMat = glm::mat4(1.0f);
-            grassMat = glm::translate(grassMat, vegetation[i]);
-            grassMat = glm::scale(grassMat, glm::vec3(3.0f));
-            grassMat = glm::rotate(grassMat, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
-
-            transparentShader.setMat4("model", grassMat);
-
-            grassModel.Draw(transparentShader);
         }
 
         if (SelectedRenderFeature)

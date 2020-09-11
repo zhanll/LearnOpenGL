@@ -1,0 +1,51 @@
+#include "Blend.h"
+#include "../Camera.h"
+#include "../Shader.h"
+#include "../Model.h"
+#include "../Config.h"
+#include <glm/gtc/matrix_transform.hpp>
+
+RenderFeature_Blend::RenderFeature_Blend(Camera* InCam)
+	: RenderFeatureBase(InCam)
+{
+	m_Positions =
+	{
+		glm::vec3(-1.5f, 0.0f, -0.48f),
+		glm::vec3(1.5f, 0.0f, 0.51f),
+		glm::vec3(0.0f, 0.0f, 0.7f),
+		glm::vec3(-0.3f, 0.0f, -2.3f),
+		glm::vec3(0.5f, 0.0f, -0.6f)
+	};
+}
+
+void RenderFeature_Blend::Setup()
+{
+	m_ShaderGrass = std::make_shared<Shader>("res/shaders/basic.vs", "res/shaders/transparent.fs");
+	m_ModelGrass = std::make_shared<Model>("res/models/grass/plane.obj");
+}
+
+void RenderFeature_Blend::Render()
+{
+	glm::mat4 view;
+	view = m_Camera->GetViewMatrix();
+
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(m_Camera->GetFOV()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
+	/** grass */
+	m_ShaderGrass->use();
+	m_ShaderGrass->setMat4("view", view);
+	m_ShaderGrass->setMat4("projection", projection);
+
+	for (size_t i = 0; i < m_Positions.size(); i++)
+	{
+		glm::mat4 grassMat = glm::mat4(1.0f);
+		grassMat = glm::translate(grassMat, m_Positions[i]);
+		grassMat = glm::scale(grassMat, glm::vec3(3.0f));
+		grassMat = glm::rotate(grassMat, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
+
+		m_ShaderGrass->setMat4("model", grassMat);
+
+		m_ModelGrass->Draw(*m_ShaderGrass);
+	}
+}

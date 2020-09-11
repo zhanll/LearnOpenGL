@@ -39,6 +39,9 @@
     <ClCompile Include="src\RenderFeatures\Skybox.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderFeatures\Blend.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -63,6 +66,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\RenderFeatures\Skybox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderFeatures\Blend.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
