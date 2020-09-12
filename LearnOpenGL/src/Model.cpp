@@ -12,6 +12,16 @@ void Model::Draw(Shader& shader)
         meshes[i].Draw(shader);
 }
 
+void Model::SetTextureWrapS(unsigned int S)
+{
+    textureWrapS = S;
+}
+
+void Model::SetTextureWrapT(unsigned int T)
+{
+    textureWrapT = T;
+}
+
 void Model::loadModel(std::string path)
 {
     Assimp::Importer import;
@@ -176,8 +186,8 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapS);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

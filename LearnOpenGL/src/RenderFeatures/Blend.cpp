@@ -21,7 +21,10 @@ RenderFeature_Blend::RenderFeature_Blend(Camera* InCam)
 void RenderFeature_Blend::Setup()
 {
 	m_ShaderGrass = std::make_shared<Shader>("res/shaders/basic.vs", "res/shaders/transparent.fs");
-	m_ModelGrass = std::make_shared<Model>("res/models/grass/plane.obj");
+	m_ModelGrass = std::make_shared<Model>();
+	m_ModelGrass->SetTextureWrapS(GL_CLAMP_TO_EDGE);
+	m_ModelGrass->SetTextureWrapT(GL_CLAMP_TO_EDGE);
+	m_ModelGrass->loadModel("res/models/grass/plane.obj");
 }
 
 void RenderFeature_Blend::Render()
