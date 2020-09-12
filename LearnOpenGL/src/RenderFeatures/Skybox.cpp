@@ -2,11 +2,9 @@
 #include "../Shader.h"
 #include "../Model.h"
 #include "../Camera.h"
-#include "../Config.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
@@ -29,16 +27,12 @@ void RenderFeature_Skybox::Setup()
 
 void RenderFeature_Skybox::Render()
 {
+	RenderFeatureBase::Render();
+
 	if (!m_Camera)
 	{
 		return;
 	}
-
-	glm::mat4 view;
-	view = m_Camera->GetViewMatrix();
-
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(m_Camera->GetFOV()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
 	// draw skybox as last
 	glCullFace(GL_FRONT);
@@ -52,8 +46,8 @@ void RenderFeature_Skybox::Render()
 	skyboxMat = glm::scale(skyboxMat, glm::vec3(2.0f, 2.0f, 2.0f));
 
 	m_Shader->setMat4("model", skyboxMat);
-	m_Shader->setMat4("view", view);
-	m_Shader->setMat4("projection", projection);
+	m_Shader->setMat4("view", m_MatView);
+	m_Shader->setMat4("projection", m_MatProjection);
 
 	// skybox cube
 	glActiveTexture(GL_TEXTURE0);

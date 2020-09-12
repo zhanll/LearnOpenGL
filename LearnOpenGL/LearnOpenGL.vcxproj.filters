@@ -42,6 +42,12 @@
     <ClCompile Include="src\RenderFeatures\Blend.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderFeatures\Light.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderFeatures\RenderFeature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -69,6 +75,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\RenderFeatures\Blend.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderFeatures\Light.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

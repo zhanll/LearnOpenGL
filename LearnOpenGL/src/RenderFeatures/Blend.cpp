@@ -2,7 +2,6 @@
 #include "../Camera.h"
 #include "../Shader.h"
 #include "../Model.h"
-#include "../Config.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 RenderFeature_Blend::RenderFeature_Blend(Camera* InCam)
@@ -29,16 +28,12 @@ void RenderFeature_Blend::Setup()
 
 void RenderFeature_Blend::Render()
 {
-	glm::mat4 view;
-	view = m_Camera->GetViewMatrix();
-
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(m_Camera->GetFOV()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+	RenderFeatureBase::Render();
 
 	/** grass */
 	m_ShaderGrass->use();
-	m_ShaderGrass->setMat4("view", view);
-	m_ShaderGrass->setMat4("projection", projection);
+	m_ShaderGrass->setMat4("view", m_MatView);
+	m_ShaderGrass->setMat4("projection", m_MatProjection);
 
 	for (size_t i = 0; i < m_Positions.size(); i++)
 	{

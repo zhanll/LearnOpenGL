@@ -14,6 +14,7 @@
 #include "RenderFeatures/GeometryShader.h"
 #include "RenderFeatures/Skybox.h"
 #include "RenderFeatures/Blend.h"
+#include "RenderFeatures/Light.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -79,7 +80,8 @@ int main()
 	{
 		{"GeometryShader", std::make_shared<RenderFeature_GeometryShader>(&camera)},
         {"Skybox", std::make_shared<RenderFeature_Skybox>(&camera)},
-        {"Blend", std::make_shared<RenderFeature_Blend>(&camera)}
+        {"Blend", std::make_shared<RenderFeature_Blend>(&camera)},
+        {"Light", std::make_shared<RenderFeature_Light>(&camera)}
 	};
 	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
 	std::cout << "Select Render Feature:" << std::endl;
@@ -136,23 +138,12 @@ int main()
     glEnable(GL_CULL_FACE);
 
     /* Shader */
-    Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
-    Shader lightShader("res/shaders/basic.vs", "res/shaders/light.fs");
-    Shader outlineShader("res/shaders/basic.vs", "res/shaders/outline.fs");
-    Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
+    //Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
+   // Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
 
     /* Model */
-    Model backpackModel("res/models/backpack/backpack.obj");
-    Model floorModel("res/models/plane/plane.obj");
-    Model cubeModel("res/models/cube/cube.obj");
-
-    /* Position Input */
-	glm::vec3 pointLightPositions[] = {
-		glm::vec3(0.7f,  4.2f,  2.0f),
-		glm::vec3(2.3f, -3.3f, -4.0f),
-		glm::vec3(-4.0f,  2.0f, -12.0f),
-		glm::vec3(0.0f,  0.0f, -25.0f)
-	};
+    //Model backpackModel("res/models/backpack/backpack.obj");
+    //Model floorModel("res/models/plane/plane.obj");
 
     /** Vertex Data */
 	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
@@ -231,7 +222,7 @@ int main()
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         /* basic */
-        basicShader.use();
+        /*basicShader.use();
         basicShader.setFloat("material.shininess", 32.0f);
 
         basicShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
@@ -267,7 +258,7 @@ int main()
         projection = glm::perspective(glm::radians(camera.GetFOV()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
         basicShader.setMat4("view", view);
-        basicShader.setMat4("projection", projection);
+        basicShader.setMat4("projection", projection);*/
 
         /** backpack */
         /*glm::mat4 backpackMat = glm::mat4(1.0f);
@@ -277,28 +268,12 @@ int main()
         backpackModel.Draw(basicShader);*/
 
         /** floor */
-        glm::mat4 floorMat = glm::mat4(1.0f);
+        /*glm::mat4 floorMat = glm::mat4(1.0f);
         floorMat = glm::translate(floorMat, glm::vec3(0.f, -1.5f, 0.f));
         floorMat = glm::scale(floorMat, glm::vec3(50.f, 50.f, 50.f));
         basicShader.setMat4("model", floorMat);
 
-        floorModel.Draw(basicShader);
-
-        /* light cube */
-        lightShader.use();
-        lightShader.setMat4("view", view);
-        lightShader.setMat4("projection", projection);
-
-        for (unsigned int i = 0; i < 1; i++)
-        {
-            glm::mat4 lightModel = glm::mat4(1.0f);
-            lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-            lightModel = glm::translate(lightModel, pointLightPositions[i]);
-
-            lightShader.setMat4("model", lightModel);
-
-            cubeModel.Draw(lightShader);
-        }
+        floorModel.Draw(basicShader);*/
 
         if (SelectedRenderFeature)
         {
