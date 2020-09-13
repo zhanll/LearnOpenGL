@@ -54,6 +54,7 @@ void RenderFeature_Light::Render()
 		glm::mat4 MatModel(1.f);
 		MatModel = glm::rotate(MatModel, glm::radians(sint * 180), glm::vec3( (float)((iLight - 1) % 2), (float)(iLight % 2), (float)((iLight + 1) % 2) ));
 		MatModel = glm::translate(MatModel, m_PositionLights[iLight]);
+		m_ShaderLight->use();
 		m_ShaderLight->setMat4("model", MatModel);
 		m_ModelLight->Draw(*m_ShaderLight);
 
@@ -63,6 +64,7 @@ void RenderFeature_Light::Render()
 		ossHead << "pointLight[" << iLight;
 		std::string strHead = ossHead.str();
 
+		m_ShaderContainer->use();
 		m_ShaderContainer->setVec3(strHead + "].position", LightPos);
 		m_ShaderContainer->setVec3(strHead + "].ambient", 0.05f, 0.05f, 0.05f);
 		m_ShaderContainer->setVec3(strHead + "].diffuse", 0.5f, 0.5f, 0.5f);
