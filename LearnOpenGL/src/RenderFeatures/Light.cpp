@@ -31,8 +31,8 @@ RenderFeature_Light::RenderFeature_Light(Camera* InCam)
 
 void RenderFeature_Light::Setup()
 {
-	m_ShaderLight = std::make_shared<Shader>("res/shaders/basic.vs", "res/shaders/light.fs");
-	m_ShaderContainer = std::make_shared<Shader>("res/shaders/basic.vs", "res/shaders/basic.fs");
+	m_ShaderLight = std::make_shared<Shader>("res/shaders/basic.vs", "res/shaders/light_cube.fs");
+	m_ShaderContainer = std::make_shared<Shader>("res/shaders/light_combination.vs", "res/shaders/light_combination.fs");
 	m_ModelLight = std::make_shared<Model>("res/models/cube/cube.obj");
 	m_ModelContainer = std::make_shared<Model>("res/models/container/cube.obj");
 }

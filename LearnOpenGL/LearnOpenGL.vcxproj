@@ -159,6 +159,7 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\RenderFeatures\Blend.cpp" />
+    <ClCompile Include="src\RenderFeatures\FrameBuffer.cpp" />
     <ClCompile Include="src\RenderFeatures\GeometryShader.cpp" />
     <ClCompile Include="src\RenderFeatures\Light.cpp" />
     <ClCompile Include="src\RenderFeatures\RenderFeature.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\RenderFeatures\Blend.h" />
+    <ClInclude Include="src\RenderFeatures\FrameBuffer.h" />
     <ClInclude Include="src\RenderFeatures\GeometryShader.h" />
     <ClInclude Include="src\RenderFeatures\Light.h" />
     <ClInclude Include="src\RenderFeatures\RenderFeature.h" />
@@ -182,14 +184,15 @@
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
+    <None Include="res\shaders\light_combination.fs" />
+    <None Include="res\shaders\light_combination.vs" />
     <None Include="res\shaders\explode.fs" />
     <None Include="res\shaders\explode.gs" />
     <None Include="res\shaders\explode.vs" />
-    <None Include="res\shaders\light.fs" />
+    <None Include="res\shaders\light_cube.fs" />
     <None Include="res\shaders\normal_visualize.fs" />
     <None Include="res\shaders\normal_visualize.gs" />
     <None Include="res\shaders\normal_visualize.vs" />
-    <None Include="res\shaders\outline.fs" />
     <None Include="res\shaders\screen.fs" />
     <None Include="res\shaders\screen.vs" />
     <None Include="res\shaders\skybox.fs" />

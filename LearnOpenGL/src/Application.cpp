@@ -15,6 +15,7 @@
 #include "RenderFeatures/Skybox.h"
 #include "RenderFeatures/Blend.h"
 #include "RenderFeatures/Light.h"
+#include "RenderFeatures/FrameBuffer.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -81,7 +82,8 @@ int main()
 		{"GeometryShader", std::make_shared<RenderFeature_GeometryShader>(&camera)},
         {"Skybox", std::make_shared<RenderFeature_Skybox>(&camera)},
         {"Blend", std::make_shared<RenderFeature_Blend>(&camera)},
-        {"Light", std::make_shared<RenderFeature_Light>(&camera)}
+        {"Light", std::make_shared<RenderFeature_Light>(&camera)},
+        {"FrameBuffer", std::make_shared<RenderFeature_FrameBuffer>(&camera)}
 	};
 	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
 	std::cout << "Select Render Feature:" << std::endl;
@@ -137,65 +139,6 @@ int main()
     glEnable(GL_STENCIL_TEST);
     glEnable(GL_CULL_FACE);
 
-    /* Shader */
-    //Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
-   // Shader screenShader("res/shaders/screen.vs", "res/shaders/screen.fs");
-
-    /* Model */
-    //Model backpackModel("res/models/backpack/backpack.obj");
-    //Model floorModel("res/models/plane/plane.obj");
-
-    /** Vertex Data */
-	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-		// positions       // texCoords
-		-1.0f,  1.0f,       0.0f, 1.0f,
-		-1.0f, -1.0f,       0.0f, 0.0f,
-		 1.0f, -1.0f,       1.0f, 0.0f,
-
-		-1.0f,  1.0f,       0.0f, 1.0f,
-		 1.0f, -1.0f,       1.0f, 0.0f,
-		 1.0f,  1.0f,       1.0f, 1.0f
-	};
-
-	// screen quad VAO
-	unsigned int quadVAO, quadVBO;
-	glGenVertexArrays(1, &quadVAO);
-	glGenBuffers(1, &quadVBO);
-	glBindVertexArray(quadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-    /** Frame Buffer */
-	/*unsigned int fbo;
-	glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-	// create a color attachment texture
-	unsigned int textureColorbuffer;
-	glGenTextures(1, &textureColorbuffer);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
-
-	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-	unsigned int rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH, SCREEN_HEIGHT); // use a single renderbuffer object for both a depth AND stencil buffer.
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
-
-	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
-
     if (SelectedRenderFeature)
     {
         SelectedRenderFeature->Setup();
@@ -211,91 +154,21 @@ int main()
         // input
         processInput(window);
 
-		// bind to framebuffer and draw scene as we normally would to color texture 
-		//glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		//glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
-
         // rendering commands
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        /* basic */
-        /*basicShader.use();
-        basicShader.setFloat("material.shininess", 32.0f);
-
-        basicShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        basicShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-        basicShader.setVec3("dirLight.diffuse", 0.3f, 0.3f, 0.3f);
-        basicShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-
-		basicShader.setVec3("pointLight[0].position", pointLightPositions[0]);
-		basicShader.setVec3("pointLight[0].ambient", 0.05f, 0.05f, 0.05f);
-		basicShader.setVec3("pointLight[0].diffuse", 0.5f, 0.5f, 0.5f);
-		basicShader.setVec3("pointLight[0].specular", 1.0f, 1.0f, 1.0f);
-		basicShader.setFloat("pointLight[0].constant", 1.0f);
-		basicShader.setFloat("pointLight[0].linear", 0.09f);
-		basicShader.setFloat("pointLight[0].quadratic", 0.032f);
-
-        basicShader.setVec3("spotLight.position", camera.GetCameraPos());
-        basicShader.setVec3("spotLight.direction", camera.GetCameraDirection());
-		basicShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-		basicShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-		basicShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-        basicShader.setFloat("spotLight.constant", 1.0f);
-        basicShader.setFloat("spotLight.linear", 0.09f);
-        basicShader.setFloat("spotLight.quadratic", 0.032f);
-        basicShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-        basicShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
-
-        basicShader.setVec3("viewPos", camera.GetCameraPos());
-
-		glm::mat4 view;
-        view = camera.GetViewMatrix();
-
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(camera.GetFOV()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
-        basicShader.setMat4("view", view);
-        basicShader.setMat4("projection", projection);*/
-
-        /** backpack */
-        /*glm::mat4 backpackMat = glm::mat4(1.0f);
-        backpackMat = glm::translate(backpackMat, glm::vec3(0.f, 2.f, -5.f));
-        basicShader.setMat4("model", backpackMat);
-
-        backpackModel.Draw(basicShader);*/
-
-        /** floor */
-        /*glm::mat4 floorMat = glm::mat4(1.0f);
-        floorMat = glm::translate(floorMat, glm::vec3(0.f, -1.5f, 0.f));
-        floorMat = glm::scale(floorMat, glm::vec3(50.f, 50.f, 50.f));
-        basicShader.setMat4("model", floorMat);
-
-        floorModel.Draw(basicShader);*/
-
         if (SelectedRenderFeature)
         {
             SelectedRenderFeature->Render();
         }
 
-		// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
-		/*glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
-
-        screenShader.use();
-        glBindVertexArray(quadVAO);
-        glBindTexture(GL_TEXTURE_2D, textureColorbuffer);   // use the color attachment texture as the texture of the quad plane
-        glDrawArrays(GL_TRIANGLES, 0, 6);*/
-
         // check all events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    glDeleteVertexArrays(1, &quadVAO);
-    glDeleteBuffers(1, &quadVBO);
 
     glfwTerminate();
 

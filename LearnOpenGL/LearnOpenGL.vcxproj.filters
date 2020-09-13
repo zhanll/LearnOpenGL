@@ -48,6 +48,9 @@
     <ClCompile Include="src\RenderFeatures\RenderFeature.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderFeatures\FrameBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -80,12 +83,11 @@
     <ClInclude Include="src\RenderFeatures\Light.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\RenderFeatures\FrameBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\basic.vs" />
-    <None Include="res\shaders\basic.fs" />
-    <None Include="res\shaders\light.fs" />
-    <None Include="res\shaders\outline.fs" />
     <None Include="res\shaders\transparent.fs" />
     <None Include="res\shaders\screen.vs" />
     <None Include="res\shaders\screen.fs" />
@@ -97,5 +99,10 @@
     <None Include="res\shaders\normal_visualize.gs" />
     <None Include="res\shaders\normal_visualize.vs" />
     <None Include="res\shaders\normal_visualize.fs" />
+    <None Include="res\shaders\light_cube.fs" />
+    <None Include="res\shaders\light_combination.fs" />
+    <None Include="res\shaders\light_combination.vs" />
+    <None Include="res\shaders\basic.vs" />
+    <None Include="res\shaders\basic.fs" />
   </ItemGroup>
 </Project>
