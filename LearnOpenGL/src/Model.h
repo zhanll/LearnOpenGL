@@ -23,6 +23,9 @@ public:
 	void SetTextureWrapT(unsigned int T);
     void loadModel(std::string path);
     void Draw(Shader& shader);
+
+    const std::vector<Mesh>& GetMeshes();
+    const std::vector<Texture>& GetLoadedTextures();
    
 private:
     // model data

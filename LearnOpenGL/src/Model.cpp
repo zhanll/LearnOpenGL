@@ -12,6 +12,16 @@ void Model::Draw(Shader& shader)
         meshes[i].Draw(shader);
 }
 
+const std::vector<Mesh>& Model::GetMeshes()
+{
+    return meshes;
+}
+
+const std::vector<Texture>& Model::GetLoadedTextures()
+{
+    return textures_loaded;
+}
+
 void Model::SetTextureWrapS(unsigned int S)
 {
     textureWrapS = S;

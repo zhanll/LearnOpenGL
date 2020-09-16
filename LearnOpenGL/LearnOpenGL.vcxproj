@@ -161,6 +161,7 @@
     <ClCompile Include="src\RenderFeatures\Blend.cpp" />
     <ClCompile Include="src\RenderFeatures\FrameBuffer.cpp" />
     <ClCompile Include="src\RenderFeatures\GeometryShader.cpp" />
+    <ClCompile Include="src\RenderFeatures\Instance.cpp" />
     <ClCompile Include="src\RenderFeatures\Light.cpp" />
     <ClCompile Include="src\RenderFeatures\RenderFeature.cpp" />
     <ClCompile Include="src\RenderFeatures\Skybox.cpp" />
@@ -176,12 +177,14 @@
     <ClInclude Include="src\RenderFeatures\Blend.h" />
     <ClInclude Include="src\RenderFeatures\FrameBuffer.h" />
     <ClInclude Include="src\RenderFeatures\GeometryShader.h" />
+    <ClInclude Include="src\RenderFeatures\Instance.h" />
     <ClInclude Include="src\RenderFeatures\Light.h" />
     <ClInclude Include="src\RenderFeatures\RenderFeature.h" />
     <ClInclude Include="src\RenderFeatures\Skybox.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\asteroids.vs" />
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\light_combination.fs" />
