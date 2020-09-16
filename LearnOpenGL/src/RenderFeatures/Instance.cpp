@@ -1,6 +1,7 @@
 #include "Instance.h"
 #include "../Shader.h"
 #include "../Model.h"
+#include "../Camera.h"
 #include "../Config.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,10 +10,12 @@ unsigned int amount = 100000;
 
 void RenderFeature_Instance::Setup()
 {
-	m_ShaderAsteriod = std::make_shared<Shader>("res/shaders/asteriods.vs", "res/shaders/basic.fs");
+	m_ShaderAsteroid = std::make_shared<Shader>("res/shaders/asteroids.vs", "res/shaders/basic.fs");
 	m_ShaderPlanet = std::make_shared<Shader>("res/shaders/basic.vs", "res/shaders/basic.fs");
-	m_ModelAsteriod = std::make_shared<Model>("res/models/rock/m_ModelAsteriod->obj");
+	m_ModelAsteriod = std::make_shared<Model>("res/models/rock/rock.obj");
 	m_ModelPlanet = std::make_shared<Model>("res/models/planet/planet.obj");
+
+	m_Camera->SetCameraPos(glm::vec3(0.f, 0.f, 105.f));
 
 	// generate a large list of semi-random model transformation matrices
 	// ------------------------------------------------------------------
@@ -53,21 +56,48 @@ void RenderFeature_Instance::Setup()
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
 
-	delete [] modelMatrices;
+	// set transformation matrices as an instance vertex attribute (with divisor 1)
+	// note: we're cheating a little by taking the, now publicly declared, VAO of the model's mesh(es) and adding new vertexAttribPointers
+	// normally you'd want to do this in a more organized fashion, but for learning purposes this will do.
+	// -----------------------------------------------------------------------------------------------------------------------------------
+	for (unsigned int i = 0; i < m_ModelAsteriod->GetMeshes().size(); i++)
+	{
+		unsigned int VAO = m_ModelAsteriod->GetMeshes()[i].GetVAO();
+		glBindVertexArray(VAO);
+		// set attribute pointers for matrix (4 times vec4)
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
+
+		glBindVertexArray(0);
+	}
+
+	delete[] modelMatrices;
 }
 
 void RenderFeature_Instance::Render()
 {
-	RenderFeatureBase::Render();
-
 	// configure transformation matrices
-	m_ShaderAsteriod->use();
-	m_ShaderAsteriod->setMat4("projection", m_MatProjection);
-	m_ShaderAsteriod->setMat4("view", m_MatView);
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+	glm::mat4 view = m_Camera->GetViewMatrix();
+
+	m_ShaderAsteroid->use();
+	m_ShaderAsteroid->setMat4("projection", projection);
+	m_ShaderAsteroid->setMat4("view", view);
 
 	m_ShaderPlanet->use();
-	m_ShaderPlanet->setMat4("projection", m_MatProjection);
-	m_ShaderPlanet->setMat4("view", m_MatView);
+	m_ShaderPlanet->setMat4("projection", projection);
+	m_ShaderPlanet->setMat4("view", view);
 
 	// draw planet
 	glm::mat4 model = glm::mat4(1.0f);
@@ -77,8 +107,8 @@ void RenderFeature_Instance::Render()
 	m_ModelPlanet->Draw(*m_ShaderPlanet);
 
 	// draw meteorites
-	m_ShaderAsteriod->use();
-	m_ShaderAsteriod->setInt("texture_diffuse1", 0);
+	m_ShaderAsteroid->use();
+	m_ShaderAsteroid->setInt("texture_diffuse1", 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_ModelAsteriod->GetLoadedTextures()[0].id);
 	for (unsigned int i = 0; i < m_ModelAsteriod->GetMeshes().size(); i++)

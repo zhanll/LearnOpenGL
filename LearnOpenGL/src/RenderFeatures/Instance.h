@@ -14,7 +14,7 @@ public:
 	void Render() override;
 
 protected:
-	std::shared_ptr<Shader> m_ShaderAsteriod;
+	std::shared_ptr<Shader> m_ShaderAsteroid;
 	std::shared_ptr<Shader> m_ShaderPlanet;
 	std::shared_ptr<Model> m_ModelAsteriod;
 	std::shared_ptr<Model> m_ModelPlanet;

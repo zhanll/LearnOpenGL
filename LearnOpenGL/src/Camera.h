@@ -14,6 +14,8 @@ public:
 	inline glm::vec3 GetCameraDirection() const { return cameraFront; }
 	inline float GetFOV() const { return fov; }
 
+	inline void SetCameraPos(glm::vec3 InPos) { cameraPos = InPos; }
+
 	void MoveForward(float deltaTime);
 	void MoveRight(float deltaTime);
 

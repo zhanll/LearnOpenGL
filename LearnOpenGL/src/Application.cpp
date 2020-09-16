@@ -16,6 +16,7 @@
 #include "RenderFeatures/Blend.h"
 #include "RenderFeatures/Light.h"
 #include "RenderFeatures/FrameBuffer.h"
+#include "RenderFeatures/Instance.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -83,7 +84,8 @@ int main()
         {"Skybox", std::make_shared<RenderFeature_Skybox>(&camera)},
         {"Blend", std::make_shared<RenderFeature_Blend>(&camera)},
         {"Light", std::make_shared<RenderFeature_Light>(&camera)},
-        {"FrameBuffer", std::make_shared<RenderFeature_FrameBuffer>(&camera)}
+        {"FrameBuffer", std::make_shared<RenderFeature_FrameBuffer>(&camera)},
+        {"Instance", std::make_shared<RenderFeature_Instance>(&camera)}
 	};
 	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
 	std::cout << "Select Render Feature:" << std::endl;
