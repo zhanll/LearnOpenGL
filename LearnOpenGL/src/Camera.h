@@ -15,6 +15,7 @@ public:
 	inline float GetFOV() const { return fov; }
 
 	inline void SetCameraPos(glm::vec3 InPos) { cameraPos = InPos; }
+	inline void SetCameraYaw(float InYaw) { yaw = InYaw; }
 
 	void MoveForward(float deltaTime);
 	void MoveRight(float deltaTime);

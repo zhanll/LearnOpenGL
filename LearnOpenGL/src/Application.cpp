@@ -17,6 +17,7 @@
 #include "RenderFeatures/Light.h"
 #include "RenderFeatures/FrameBuffer.h"
 #include "RenderFeatures/Instance.h"
+#include "RenderFeatures/AntiAliasing.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -85,7 +86,8 @@ int main()
         {"Blend", std::make_shared<RenderFeature_Blend>(&camera)},
         {"Light", std::make_shared<RenderFeature_Light>(&camera)},
         {"FrameBuffer", std::make_shared<RenderFeature_FrameBuffer>(&camera)},
-        {"Instance", std::make_shared<RenderFeature_Instance>(&camera)}
+        {"Instance", std::make_shared<RenderFeature_Instance>(&camera)},
+        {"AntiAliasing", std::make_shared<RenderFeature_AntiAliasing>(&camera)}
 	};
 	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
 	std::cout << "Select Render Feature:" << std::endl;
