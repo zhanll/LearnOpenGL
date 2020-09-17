@@ -15,14 +15,9 @@ public:
 
 private:
 	std::shared_ptr<Shader> m_ShaderCube;
-	std::shared_ptr<Shader> m_ShaderScreen;
 	std::shared_ptr<Model> m_ModelCube;
 
 	unsigned int m_FBOMultiSampled;
 	unsigned int m_CBOMultiSampled;
 	unsigned int m_RBOMultiSampled;
-	unsigned int m_FBOScreen;
-	unsigned int m_CBOScreen;
-	unsigned int m_VAOQuad;
-	unsigned int m_VBOQuad;
 };
