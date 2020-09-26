@@ -58,7 +58,7 @@ void RenderFeature_Light::Render()
 		m_ShaderLight->setMat4("model", MatModel);
 		m_ModelLight->Draw(*m_ShaderLight);
 
-		glm::vec3 LightPos = glm::vec3(MatModel * glm::vec4(m_PositionLights[iLight], 1.f));
+		glm::vec3 LightPos = glm::vec3(MatModel * glm::vec4(0.f, 0.f, 0.f, 1.f));
 
 		std::ostringstream ossHead;
 		ossHead << "pointLight[" << iLight;

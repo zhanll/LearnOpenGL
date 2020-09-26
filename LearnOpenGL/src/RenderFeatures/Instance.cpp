@@ -110,7 +110,7 @@ void RenderFeature_Instance::Render()
 	m_ShaderAsteroid->use();
 	m_ShaderAsteroid->setInt("texture_diffuse1", 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_ModelAsteriod->GetLoadedTextures()[0].GetCorrectID());
+	glBindTexture(GL_TEXTURE_2D, m_ModelAsteriod->GetLoadedTextures()[0]->GetCorrectID());
 	for (unsigned int i = 0; i < m_ModelAsteriod->GetMeshes().size(); i++)
 	{
 		glBindVertexArray((m_ModelAsteriod->GetMeshes()[i]).GetVAO());

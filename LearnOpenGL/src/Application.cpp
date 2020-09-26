@@ -18,6 +18,7 @@
 #include "RenderFeatures/FrameBuffer.h"
 #include "RenderFeatures/Instance.h"
 #include "RenderFeatures/AntiAliasing.h"
+#include "RenderFeatures/GammaCorrection.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -29,6 +30,8 @@ float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 Camera camera(glm::vec3(0.f, 3.f, 3.f), -90.f, 0.f);
+bool gammaCorrection = false;
+bool spacePressing = false;
 
 void processInput(GLFWwindow* window)
 {
@@ -43,6 +46,18 @@ void processInput(GLFWwindow* window)
         camera.MoveRight(-deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.MoveRight(deltaTime);
+    
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS &&
+        !spacePressing)
+    {
+        gammaCorrection = !gammaCorrection;
+        spacePressing = true;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+    {
+        spacePressing = false;
+    }
 }
 
 float lastX = SCREEN_WIDTH / 2.f;
@@ -87,9 +102,11 @@ int main()
         {"Light", std::make_shared<RenderFeature_Light>(&camera)},
         {"FrameBuffer", std::make_shared<RenderFeature_FrameBuffer>(&camera)},
         {"Instance", std::make_shared<RenderFeature_Instance>(&camera)},
-        {"AntiAliasing", std::make_shared<RenderFeature_AntiAliasing>(&camera)}
+        {"AntiAliasing", std::make_shared<RenderFeature_AntiAliasing>(&camera)},
+        {"GammaCorrection", std::make_shared<RenderFeature_GammaCorrection>(&camera)}
 	};
 	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
+    std::string SelectedRenderFeatureName;
 	std::cout << "Select Render Feature:" << std::endl;
 	std::cout << "-------------------------" << std::endl;
 	for (size_t i = 0; i < RenderFeatures.size(); i++)
@@ -102,6 +119,7 @@ int main()
 	if (n > 0 && n <= RenderFeatures.size())
 	{
 		SelectedRenderFeature = RenderFeatures[n - 1].RenderFeature;
+        SelectedRenderFeatureName = RenderFeatures[n - 1].Name;
 	}
 
     glfwInit();
@@ -166,6 +184,11 @@ int main()
 
         if (SelectedRenderFeature)
         {
+            if (SelectedRenderFeatureName == "GammaCorrection")
+            {
+                auto RG = static_cast<RenderFeature_GammaCorrection*>(SelectedRenderFeature.get());
+                RG->SetGammaCorrection(gammaCorrection);
+            }
             SelectedRenderFeature->Render();
         }
 

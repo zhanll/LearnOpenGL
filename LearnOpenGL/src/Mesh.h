@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include <memory>
 #include "Texture.h"
 
 class Shader;
@@ -20,9 +21,9 @@ public:
 	// mesh data
 	std::vector<Vertex>       vertices;
 	std::vector<unsigned int> indices;
-	std::vector<Texture>      textures;
+	std::vector<std::shared_ptr<Texture>>      textures;
 
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<std::shared_ptr<Texture>> textures);
 	void Draw(Shader& shader);
 	unsigned int GetVAO() const;
 

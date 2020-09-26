@@ -60,6 +60,9 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderFeatures\GammaCorrection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -104,6 +107,9 @@
     <ClInclude Include="src\Texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\RenderFeatures\GammaCorrection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\transparent.fs" />
@@ -123,5 +129,6 @@
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\asteroids.vs" />
+    <None Include="res\shaders\gamma_correction.fs" />
   </ItemGroup>
 </Project>

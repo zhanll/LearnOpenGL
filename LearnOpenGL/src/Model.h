@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <memory>
 #include "Mesh.h"
 #include "glad/glad.h"
 
@@ -25,18 +26,17 @@ public:
     void Draw(Shader& shader);
 
     const std::vector<Mesh>& GetMeshes();
-    const std::vector<Texture>& GetLoadedTextures();
+    const std::vector<std::shared_ptr<Texture>>& GetLoadedTextures();
    
 private:
     // model data
     std::vector<Mesh> meshes;
-    std::vector<Texture> textures_loaded;
+    std::vector<std::shared_ptr<Texture>> textures_loaded;
     std:: string directory;
     unsigned int textureWrapS = GL_REPEAT;
     unsigned int textureWrapT = GL_REPEAT;
 
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
-    unsigned int TextureFromFile(const char* path, const std::string& directory);
+    std::vector<std::shared_ptr<Texture>> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 };

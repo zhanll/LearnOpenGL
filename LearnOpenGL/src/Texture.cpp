@@ -39,28 +39,34 @@ void Texture::SetTextureWrapT(unsigned int T)
 	textureWrapT = T;
 }
 
-void Texture::LoadFromFile(const char* path, const std::string& directory, bool gammaCorrection)
+void Texture::LoadFromFile(bool gammaCorrection)
 {
-	std::string filename = std::string(path);
-	filename = directory + '/' + filename;
-
 	unsigned int& textureID = gammaCorrection ? ID_GammaCorrected : ID;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
-	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
+		GLenum internalFormat;
 		GLenum format;
 		if (nrComponents == 1)
-			format = GL_RED;
+		{
+			internalFormat = format = GL_RED;
+		}
 		else if (nrComponents == 3)
-			format = gammaCorrection ? GL_SRGB : GL_RGB;
+		{
+			internalFormat = gammaCorrection ? GL_SRGB : GL_RGB;
+			format = GL_RGB;
+		}
 		else if (nrComponents == 4)
-			format = gammaCorrection ? GL_SRGB_ALPHA : GL_RGBA;
+		{
+			internalFormat = gammaCorrection ? GL_SRGB_ALPHA : GL_RGBA;
+			format = GL_RGBA;
+		}
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapS);
