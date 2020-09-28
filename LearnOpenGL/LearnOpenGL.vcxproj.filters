@@ -63,6 +63,9 @@
     <ClCompile Include="src\RenderFeatures\GammaCorrection.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderFeatures\ShadowMap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -110,6 +113,9 @@
     <ClInclude Include="src\RenderFeatures\GammaCorrection.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\RenderFeatures\ShadowMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\transparent.fs" />
@@ -130,5 +136,11 @@
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\asteroids.vs" />
     <None Include="res\shaders\gamma_correction.fs" />
+    <None Include="res\shaders\depth_map.vs" />
+    <None Include="res\shaders\depth_map.fs" />
+    <None Include="res\shaders\shadow.vs" />
+    <None Include="res\shaders\shadow.fs" />
+    <None Include="res\shaders\depth_map_debug.vs" />
+    <None Include="res\shaders\depth_map_debug.fs" />
   </ItemGroup>
 </Project>

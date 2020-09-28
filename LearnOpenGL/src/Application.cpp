@@ -19,6 +19,7 @@
 #include "RenderFeatures/Instance.h"
 #include "RenderFeatures/AntiAliasing.h"
 #include "RenderFeatures/GammaCorrection.h"
+#include "RenderFeatures/ShadowMap.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -103,7 +104,8 @@ int main()
         {"FrameBuffer", std::make_shared<RenderFeature_FrameBuffer>(&camera)},
         {"Instance", std::make_shared<RenderFeature_Instance>(&camera)},
         {"AntiAliasing", std::make_shared<RenderFeature_AntiAliasing>(&camera)},
-        {"GammaCorrection", std::make_shared<RenderFeature_GammaCorrection>(&camera)}
+        {"GammaCorrection", std::make_shared<RenderFeature_GammaCorrection>(&camera)},
+        {"ShadowMap", std::make_shared<RenderFeature_ShadowMap>(&camera)}
 	};
 	std::shared_ptr<RenderFeatureBase> SelectedRenderFeature = nullptr;
     std::string SelectedRenderFeatureName;

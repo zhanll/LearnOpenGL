@@ -166,6 +166,7 @@
     <ClCompile Include="src\RenderFeatures\Instance.cpp" />
     <ClCompile Include="src\RenderFeatures\Light.cpp" />
     <ClCompile Include="src\RenderFeatures\RenderFeature.cpp" />
+    <ClCompile Include="src\RenderFeatures\ShadowMap.cpp" />
     <ClCompile Include="src\RenderFeatures\Skybox.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\RenderFeatures\Instance.h" />
     <ClInclude Include="src\RenderFeatures\Light.h" />
     <ClInclude Include="src\RenderFeatures\RenderFeature.h" />
+    <ClInclude Include="src\RenderFeatures\ShadowMap.h" />
     <ClInclude Include="src\RenderFeatures\Skybox.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Texture.h" />
@@ -193,6 +195,10 @@
     <None Include="res\shaders\asteroids.vs" />
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
+    <None Include="res\shaders\depth_map.fs" />
+    <None Include="res\shaders\depth_map.vs" />
+    <None Include="res\shaders\depth_map_debug.fs" />
+    <None Include="res\shaders\depth_map_debug.vs" />
     <None Include="res\shaders\gamma_correction.fs" />
     <None Include="res\shaders\light_combination.fs" />
     <None Include="res\shaders\light_combination.vs" />
@@ -205,6 +211,8 @@
     <None Include="res\shaders\normal_visualize.vs" />
     <None Include="res\shaders\screen.fs" />
     <None Include="res\shaders\screen.vs" />
+    <None Include="res\shaders\shadow.fs" />
+    <None Include="res\shaders\shadow.vs" />
     <None Include="res\shaders\skybox.fs" />
     <None Include="res\shaders\skybox.vs" />
     <None Include="res\shaders\transparent.fs" />

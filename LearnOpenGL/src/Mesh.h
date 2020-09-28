@@ -25,6 +25,7 @@ public:
 
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<std::shared_ptr<Texture>> textures);
 	void Draw(Shader& shader);
+	void Draw();
 	unsigned int GetVAO() const;
 
 private:

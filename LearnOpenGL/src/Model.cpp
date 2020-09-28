@@ -13,6 +13,12 @@ void Model::Draw(Shader& shader)
         meshes[i].Draw(shader);
 }
 
+void Model::Draw()
+{
+	for (unsigned int i = 0; i < meshes.size(); i++)
+		meshes[i].Draw();
+}
+
 const std::vector<Mesh>& Model::GetMeshes()
 {
     return meshes;
